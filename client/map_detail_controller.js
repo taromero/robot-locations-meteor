@@ -1,4 +1,6 @@
-Maps = new Meteor.Collection("maps")
+Maps = new Meteor.Collection('maps')
+Locations = new Meteor.Collection('locations')
+
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
@@ -13,7 +15,12 @@ MapDetailController = RouteController.extend({
       }
     }
   },
+  waitOn: function() {
+    return Meteor.subscribe('locations-for-map', this.params.name)
+  },
   data: function() {
-    return Maps.findOne({name: this.params.name})
+    var currentMap = Maps.findOne({name: this.params.name})
+    Session.set('currentMap', currentMap)
+    return currentMap
   }
 })

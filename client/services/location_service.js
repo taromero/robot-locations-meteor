@@ -15,7 +15,21 @@ LocationService = function(canvas) {
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = cs.getRectangleCenter(currentRectangleData)
-        cs.drawLine(stage, from, cs.getMousePos(canvas, $click))
+        var lineCoords = cs.drawLine(stage, from, cs.getMousePos(canvas, $click))
+
+        var cc = cs.getCanvasCoordinates(canvas)
+        var location = {
+          canvas: {
+            x: cc.left,
+            y: cc.top
+          },
+          rectangle: currentRectangleData,
+          arrow: lineCoords,
+          mapName: Session.get('currentMap').name
+        }
+        console.log('location ' , location);
+
+        Locations.insert(location)
         state = 'waitForRectangleFirstClick'
       }
     }
