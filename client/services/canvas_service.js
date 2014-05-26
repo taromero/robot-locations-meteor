@@ -1,4 +1,4 @@
-LocationService = {
+CanvasService = {
   getRectangleCenter: function(currentRectangleData) {
     var crd = currentRectangleData
     return { x: crd.x + crd.width/2, y: crd.y + crd.height/2 }
@@ -24,9 +24,13 @@ LocationService = {
     shape.graphics.mt(from.x, from.y).lineTo(to.x, to.y)
     stage.addChild(shape)
     stage.update()
+    return { from: from, to: to }
   },
   getMousePos: function(canvas, $click) {
-    var rect = canvas.getBoundingClientRect();
-    return {x: $click.clientX - rect.left, y: $click.clientY - rect.top};
+    var rect = canvas.getBoundingClientRect()
+    return {x: $click.clientX - rect.left, y: $click.clientY - rect.top}
+  },
+  getCanvasCoordinates: function(canvas) {
+    return canvas.getBoundingClientRect()
   }
 }
