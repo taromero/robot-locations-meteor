@@ -1,4 +1,4 @@
-LocationService = {
+CanvasService = {
   getRectangleCenter: function(currentRectangleData) {
     var crd = currentRectangleData
     return { x: crd.x + crd.width/2, y: crd.y + crd.height/2 }
