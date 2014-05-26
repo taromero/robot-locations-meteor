@@ -1,30 +1,35 @@
 Maps = new Meteor.Collection('maps')
 Locations = new Meteor.Collection('locations')
 
-var ls
+var locationService
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
     Template.map.rendered = function() {
       canvas = $('#map-detail-canvas')[0]
-      ls = LocationService(canvas)
+      locationService = new LocationService(canvas)
     }
     Template.map.events = {
       'click #map-detail-canvas': function($click){
-          ls.handleClick($click)
+          locationService.handleClick($click)
       }
     }
   },
   waitOn: function() {
+    Meteor.subscribe('maps')
     return Meteor.subscribe('locations-for-map', this.params.name)
   },
   data: function() {
     var currentMap = Maps.findOne({name: this.params.name})
-    var locations = Locations.find({mapName: this.params.name}).fetch()
+    var locations = Locations.find().fetch()
     Session.set('currentMap', currentMap)
-    locations.forEach(function(location) {
-      ls.drawLocation(location)
-    })
+    drawExistingLocations()
+
+    function drawExistingLocations() {
+      locations.forEach(function(location) {
+        locationService.drawLocation(location)
+      })
+    }
     return {
       map: currentMap,
       locations: locations

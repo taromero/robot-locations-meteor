@@ -5,5 +5,5 @@ MapsController = RouteController.extend({
   waitOn: function() {
     return Meteor.subscribe('maps')
   },
-  data: { maps: Maps.find({}) }
+  data: { maps: Maps.find() }
 })
