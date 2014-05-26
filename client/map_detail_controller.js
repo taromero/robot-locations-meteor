@@ -20,7 +20,7 @@ MapDetailController = RouteController.extend({
   },
   data: function() {
     var currentMap = Maps.findOne({name: this.params.name})
-    var locations = Locations.find({}).fetch()
+    var locations = Locations.find({mapName: this.params.name}).fetch()
     Session.set('currentMap', currentMap)
     locations.forEach(function(location) {
       ls.drawLocation(location)
