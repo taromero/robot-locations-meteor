@@ -16,8 +16,8 @@ MapDetailController = RouteController.extend({
     }
   },
   waitOn: function() {
-    Meteor.subscribe('maps')
-    return Meteor.subscribe('locations-for-map', this.params.name)
+    return Meteor.subscribe('maps') &&
+           Meteor.subscribe('locations-for-map', this.params.name)
   },
   data: function() {
     var currentMap = Maps.findOne({name: this.params.name})

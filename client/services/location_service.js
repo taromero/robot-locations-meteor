@@ -9,14 +9,14 @@ LocationService = function(canvas) {
     var currentRectangleData
     return function($click){
       if(state == 'waitForRectangleFirstClick') {
-        rectangleFirstPos = canvasService.getMousePos(canvas, $click)
+        rectangleFirstPos = canvasService.getMousePos(stage)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(canvas, $click))
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = canvasService.getRectangleCenter(currentRectangleData)
-        var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(canvas, $click))
+        var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(stage))
 
         var cc = canvasService.getCanvasCoordinates(canvas)
         var location = {

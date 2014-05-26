@@ -26,9 +26,8 @@ CanvasService = function() {
     stage.update()
     return { from: from, to: to }
   }
-  this.getMousePos = function(canvas, $click) {
-    var rect = canvas.getBoundingClientRect()
-    return {x: $click.clientX - rect.left, y: $click.clientY - rect.top}
+  this.getMousePos = function(stage) {
+    return {x: stage.mouseX, y: stage.mouseY}
   }
   this.getCanvasCoordinates = function(canvas) {
     return canvas.getBoundingClientRect()
