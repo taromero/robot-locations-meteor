@@ -1,4 +1,5 @@
-MapDetailContoller = RouteController.extend({
+Maps = new Meteor.Collection("maps")
+MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
     Template.map.rendered = function() {
@@ -30,5 +31,8 @@ MapDetailContoller = RouteController.extend({
           handleClick($click)
       }
     }
+  },
+  data: function() {
+    return Maps.findOne({name: this.params.name})
   }
 })

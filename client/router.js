@@ -1,7 +1,10 @@
 Router.map(function() {
-  this.route('maps', {path: '/'})
+  this.route('maps', {
+    path: '/',
+    controller: MapsController
+  })
   this.route('map.detail', {
-      path: '/map',
-      controller: MapDetailContoller
-    });
+    path: '/maps/:name',
+    controller: MapDetailController
+  });
 });
