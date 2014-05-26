@@ -1,11 +1,11 @@
 LocationService = function(canvas) {
   //we make it a function so we can init it when template is rendered (so canvas actually exists)
+  var stage = new createjs.Stage('map-detail-canvas')
+  var cs = CanvasService
   var handleClick = (function() {
     var state = 'waitForRectangleFirstClick'
     var rectangleFirstPos
-    var stage = new createjs.Stage('map-detail-canvas')
     var currentRectangleData
-    var cs = CanvasService
     return function($click){
       if(state == 'waitForRectangleFirstClick') {
         rectangleFirstPos = cs.getMousePos(canvas, $click)
@@ -27,14 +27,20 @@ LocationService = function(canvas) {
           arrow: lineCoords,
           mapName: Session.get('currentMap').name
         }
-        console.log('location ' , location);
 
         Locations.insert(location)
         state = 'waitForRectangleFirstClick'
       }
     }
   })()
+  var drawLocation = function(location) {
+    var from = { x: location.rectangle.x, y: location.rectangle.y }
+    var to = { x: from.x + location.rectangle.width, y: from.y + location.rectangle.height }
+    cs.drawRectangle(stage, from, to)
+    cs.drawLine(stage, location.arrow.from, location.arrow.to)
+  }
   return {
-    handleClick: handleClick
+    handleClick: handleClick,
+    drawLocation: drawLocation
   }
 }
