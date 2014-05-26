@@ -3,12 +3,8 @@
 </head>
 
 <body>
-  {{> hello}}
-  <img src="images/aloft-lobby.png">
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="map">
+  <canvas style="background:url(images/aloft-lobby.png)" id='map-detail-canvas' height="542" width="425"></canvas>
 </template>
