@@ -16,11 +16,12 @@ MapDetailController = RouteController.extend({
     }
   },
   waitOn: function() {
+    Meteor.subscribe('maps')
     return Meteor.subscribe('locations-for-map', this.params.name)
   },
   data: function() {
     var currentMap = Maps.findOne({name: this.params.name})
-    var locations = Locations.find({mapName: this.params.name}).fetch()
+    var locations = Locations.find().fetch()
     Session.set('currentMap', currentMap)
     locations.forEach(function(location) {
       ls.drawLocation(location)
