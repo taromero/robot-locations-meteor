@@ -1,9 +1,9 @@
-CanvasService = {
-  getRectangleCenter: function(currentRectangleData) {
+CanvasService = function() {
+  this.getRectangleCenter = function(currentRectangleData) {
     var crd = currentRectangleData
     return { x: crd.x + crd.width/2, y: crd.y + crd.height/2 }
-  },
-  drawRectangle: function (stage, from, to) {
+  }
+  this.drawRectangle = function (stage, from, to) {
     var shape = new createjs.Shape();
     shape.graphics.beginStroke("black");
     var currentRectangleData = {
@@ -17,20 +17,20 @@ CanvasService = {
     stage.addChild(shape)
     stage.update()
     return currentRectangleData
-  },
-  drawLine: function(stage, from, to) {
+  }
+  this.drawLine = function(stage, from, to) {
     var shape = new createjs.Shape();
     shape.graphics.beginStroke('red')
     shape.graphics.mt(from.x, from.y).lineTo(to.x, to.y)
     stage.addChild(shape)
     stage.update()
     return { from: from, to: to }
-  },
-  getMousePos: function(canvas, $click) {
+  }
+  this.getMousePos = function(canvas, $click) {
     var rect = canvas.getBoundingClientRect()
     return {x: $click.clientX - rect.left, y: $click.clientY - rect.top}
-  },
-  getCanvasCoordinates: function(canvas) {
+  }
+  this.getCanvasCoordinates = function(canvas) {
     return canvas.getBoundingClientRect()
   }
 }

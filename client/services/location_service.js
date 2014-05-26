@@ -1,23 +1,24 @@
 LocationService = function(canvas) {
   //we make it a function so we can init it when template is rendered (so canvas actually exists)
   var stage = new createjs.Stage('map-detail-canvas')
-  var cs = CanvasService
-  var handleClick = (function() {
+  var canvasService = new CanvasService()
+
+  this.handleClick = (function() {
     var state = 'waitForRectangleFirstClick'
     var rectangleFirstPos
     var currentRectangleData
     return function($click){
       if(state == 'waitForRectangleFirstClick') {
-        rectangleFirstPos = cs.getMousePos(canvas, $click)
+        rectangleFirstPos = canvasService.getMousePos(canvas, $click)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        currentRectangleData = cs.drawRectangle(stage, rectangleFirstPos, cs.getMousePos(canvas, $click))
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(canvas, $click))
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
-        var from = cs.getRectangleCenter(currentRectangleData)
-        var lineCoords = cs.drawLine(stage, from, cs.getMousePos(canvas, $click))
+        var from = canvasService.getRectangleCenter(currentRectangleData)
+        var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(canvas, $click))
 
-        var cc = cs.getCanvasCoordinates(canvas)
+        var cc = canvasService.getCanvasCoordinates(canvas)
         var location = {
           canvas: {
             x: cc.left,
@@ -33,14 +34,11 @@ LocationService = function(canvas) {
       }
     }
   })()
-  var drawLocation = function(location) {
+
+  this.drawLocation = function(location) {
     var from = { x: location.rectangle.x, y: location.rectangle.y }
     var to = { x: from.x + location.rectangle.width, y: from.y + location.rectangle.height }
-    cs.drawRectangle(stage, from, to)
-    cs.drawLine(stage, location.arrow.from, location.arrow.to)
-  }
-  return {
-    handleClick: handleClick,
-    drawLocation: drawLocation
+    canvasService.drawRectangle(stage, from, to)
+    canvasService.drawLine(stage, location.arrow.from, location.arrow.to)
   }
 }
