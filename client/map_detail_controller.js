@@ -7,7 +7,6 @@ MapDetailController = RouteController.extend({
     this.render('map')
     Template.map.rendered = function() {
       window.canvas = $('#map-detail-canvas')[0]
-      setCanvasSize()
       locationService = new LocationService(canvas)
     }
     Template.map.events = {
@@ -20,11 +19,6 @@ MapDetailController = RouteController.extend({
       }
     }
 
-    function setCanvasSize() {
-      var ctx = canvas.getContext('2d');
-      ctx.canvas.width  = window.innerWidth;
-      ctx.canvas.height = window.innerHeight;
-    }
   },
   waitOn: function() {
     return Meteor.subscribe('maps') &&
@@ -43,9 +37,19 @@ MapDetailController = RouteController.extend({
   onData: function() {
     drawMap()
     drawExistingLocations()
+    setCanvasSize()
+
+    function setCanvasSize() {
+      var ctx = canvas.getContext('2d');
+      var imageBounds = Session.get('imageBounds')
+      ctx.canvas.width  = imageBounds.width;
+      ctx.canvas.height = imageBounds.height;
+      stage.update()
+    }
 
     function drawMap() {
       var image = new createjs.Bitmap(Session.get('currentMap').imagePath);
+      Session.set('imageBounds', image.getBounds())
       stage.addChild(image)
       stage.update()
     }
