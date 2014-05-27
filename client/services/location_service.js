@@ -49,7 +49,7 @@ LocationService = function(canvas) {
     if(direction == 'down') { zoomFactor = -zoomFactor }
     var xZoom = stage.scaleX + zoomFactor
     var yZoom = stage.scaleY + zoomFactor
-    stage.setTransform(0, 0, xZoom, yZoom)
+    stage.setTransform(mouseCoords.x, mouseCoords.y, xZoom, yZoom, 0, 0, 0, mouseCoords.x, mouseCoords.y)
     stage.update()
   }
 }
