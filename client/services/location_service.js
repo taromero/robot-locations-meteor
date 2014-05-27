@@ -1,22 +1,23 @@
+
 LocationService = function(canvas) {
   //we make it a function so we can init it when template is rendered (so canvas actually exists)
-  var stage = new createjs.Stage('map-detail-canvas')
+  window.stage = new createjs.Stage('map-detail-canvas')
   var canvasService = new CanvasService()
 
   this.handleClick = (function() {
     var state = 'waitForRectangleFirstClick'
     var rectangleFirstPos
     var currentRectangleData
-    return function($click){
+    return function(){
       if(state == 'waitForRectangleFirstClick') {
-        rectangleFirstPos = canvasService.getMousePos(canvas, $click)
+        rectangleFirstPos = canvasService.getMousePos(stage)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(canvas, $click))
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = canvasService.getRectangleCenter(currentRectangleData)
-        var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(canvas, $click))
+        var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(stage))
 
         var cc = canvasService.getCanvasCoordinates(canvas)
         var location = {
@@ -40,5 +41,15 @@ LocationService = function(canvas) {
     var to = { x: from.x + location.rectangle.width, y: from.y + location.rectangle.height }
     canvasService.drawRectangle(stage, from, to)
     canvasService.drawLine(stage, location.arrow.from, location.arrow.to)
+  }
+
+  this.zoom = function(direction) {
+    var mouseCoords = canvasService.getMousePos(stage)
+    var zoomFactor = 0.2
+    if(direction == 'down') { zoomFactor = -zoomFactor }
+    var xZoom = stage.scaleX + zoomFactor
+    var yZoom = stage.scaleY + zoomFactor
+    stage.setTransform(0, 0, xZoom, yZoom)
+    stage.update()
   }
 }
