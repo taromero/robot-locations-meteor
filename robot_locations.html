@@ -7,8 +7,23 @@
 
 <template name="map">
   <h1>{{ map.name }}</h1>
-  <div id='containingDiv'>
+  <div>
+    Current mode: {{mode}}
+  </div>
+  <div class='containing-div'>
     <canvas id='map-detail-canvas'></canvas>
+  </div>
+  <div class='side-bar'>
+    <div class='side-actions'>
+      <button class='create'>Create Locations</button>
+      <button class='delete'>Delete Locations</button>
+    </div>
+    <div class='location-detail'>
+      {{#if location}}
+        Location ID: {{location._id}}
+        <button class='delete-from-db'> Remove </button>
+      {{/if}}
+    </div>
   </div>
 </template>
 
