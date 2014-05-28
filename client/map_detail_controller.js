@@ -15,7 +15,7 @@ MapDetailController = RouteController.extend({
     Template.map.location = function() {
       return Session.get('location')
     }
-    Session.set('mode', 'delete')
+    Session.set('mode', 'Choose!')
     Template.map.events = {
       'click #map-detail-canvas': function($click) {
         if(Session.get('mode') == 'create') {

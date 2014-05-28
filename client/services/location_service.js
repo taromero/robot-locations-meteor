@@ -13,8 +13,7 @@ LocationService = function(canvas) {
         rectangleFirstPos = canvasService.getMousePos(stage)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        var location = Locations.insert({})
-        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage), location.id)
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = canvasService.getRectangleCenter(currentRectangleData)
