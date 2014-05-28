@@ -1,6 +1,7 @@
 {
   "packages": {
     "iron-router": {},
-    "createjs": {}
+    "createjs": {},
+    "bootstrap-3": {}
   }
 }

@@ -7,11 +7,8 @@ CanvasService = function() {
     var shape = new createjs.Shape();
     shape.graphics.beginStroke("black");
     shape.graphics.setStrokeStyle(5)
-    shape.locationId = locationId
-    shape.on('click', function(e) {
-      var location = Locations.findOne({ _id: shape.locationId })
-      Session.set('location', location)
-    })
+    shape.locationId = locationId //so we can later retrieve location information from shape
+    shape.on('click', showLocationDetail)
     var currentRectangleData = {
       x: from.x,
       y: from.y,
@@ -23,6 +20,11 @@ CanvasService = function() {
     stage.addChild(shape)
     stage.update()
     return currentRectangleData
+
+    function showLocationDetail() {
+      var location = Locations.findOne({ _id: shape.locationId })
+      Session.set('location', location)
+    }
   }
   this.drawLine = function(stage, from, to) {
     var shape = new createjs.Shape();

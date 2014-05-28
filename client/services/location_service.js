@@ -13,32 +13,30 @@ LocationService = function(canvas) {
         rectangleFirstPos = canvasService.getMousePos(stage)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        var location = Locations.insert({})
-        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage), location.id)
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = canvasService.getRectangleCenter(currentRectangleData)
         var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(stage))
-
-        var cc = canvasService.getCanvasCoordinates(canvas)
-        var location = {
-          canvas: {
-            x: cc.left,
-            y: cc.top
-          },
-          rectangle: currentRectangleData,
-          arrow: lineCoords,
-          mapName: Session.get('currentMap').name
-        }
-
-        Locations.insert(location)
+        insertLocation(currentRectangleData, lineCoords)
         state = 'waitForRectangleFirstClick'
       }
     }
 
-    this.handleDeleteClick = function() {
-
+    function insertLocation(currentRectangleData, lineCoords) {
+      var cc = canvasService.getCanvasCoordinates(canvas)
+      var location = {
+        canvas: {
+          x: cc.left,
+          y: cc.top
+        },
+        rectangle: currentRectangleData,
+        arrow: lineCoords,
+        mapName: Session.get('currentMap').name
+      }
+      return Locations.insert(location)
     }
+
   })()
 
   this.drawLocation = function(location) {

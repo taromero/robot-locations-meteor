@@ -6,30 +6,35 @@
 </body>
 
 <template name="map">
-  <h1>{{ map.name }}</h1>
-  <div>
-    Current mode: {{mode}}
+  <div class="page-header">
+    <h1>{{ map.name }} <small> / Current mode: {{mode}}</small></h1>
   </div>
   <div class='containing-div'>
-    <canvas id='map-detail-canvas'></canvas>
+    <canvas id='map-detail-canvas' class="img-thumbnail"></canvas>
   </div>
   <div class='side-bar'>
     <div class='side-actions'>
-      <button class='create'>Create Locations</button>
-      <button class='delete'>Delete Locations</button>
+      <button class='create btn btn-primary'>Create Locations</button>
+      <button class='delete btn btn-warning'>Delete Locations</button>
     </div>
     <div class='location-detail'>
       {{#if location}}
-        Location ID: {{location._id}}
-        <button class='delete-from-db'> Remove </button>
+        <div class="panel panel-default">
+          <div class="panel-heading">Location ID: {{location._id}}</div>
+          <div class="panel-body">
+            <button class='delete-from-db btn btn-danger'> Remove </button>
+          </div>
+        </div>
       {{/if}}
     </div>
   </div>
 </template>
 
 <template name="maps">
-  <h1>List of all maps</h1>
+  <div class="jumbotron">
+    <h1>List of all maps</h1>
     {{#each maps}}
-      <a href="{{ pathFor 'map.detail' }}">{{ name }}</a>
+      <a class="btn btn-default btn-lg" href="{{ pathFor 'map.detail' }}">{{ name }}</a>
     {{/each}}
+  </div>
 </template>
