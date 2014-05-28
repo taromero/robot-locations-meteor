@@ -5,40 +5,8 @@ var locationService
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
-    Template.map.rendered = function() {
-      window.canvas = $('#map-detail-canvas')[0]
-      locationService = new LocationService(canvas)
-    }
-    Template.map.mode = function() {
-      return Session.get('mode')
-    }
-    Template.map.location = function() {
-      return Session.get('location')
-    }
-    Session.set('mode', 'Choose!')
-    Template.map.events = {
-      'click #map-detail-canvas': function($click) {
-        if(Session.get('mode') == 'create') {
-          locationService.handleCreateClick()
-        }
-      },
-      'mousewheel #map-detail-canvas': function(event) {
-        var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
-        locationService.zoom(direction)
-      },
-      'click .side-actions .create': function() {
-        Session.set('mode', 'create')
-      },
-      'click .side-actions .delete': function() {
-        Session.set('mode', 'delete')
-      },
-      'click .location-detail .delete-from-db': function() {
-        var location = Session.get('location')
-        Locations.remove({_id: location._id})
-
-      }
-    }
-
+    setTemplateBindings()
+    setTemplateEventHandlers()
   },
   waitOn: function() {
     return Meteor.subscribe('maps') &&
@@ -81,3 +49,41 @@ MapDetailController = RouteController.extend({
     }
   }
 })
+
+function setTemplateBindings() {
+  Template.map.rendered = function() {
+    window.canvas = $('#map-detail-canvas')[0]
+    locationService = new LocationService(canvas)
+  }
+  Template.map.mode = function() {
+    return Session.get('mode')
+  }
+  Template.map.location = function() {
+    return Session.get('location')
+  }
+  Session.set('mode', 'Choose!')
+}
+
+function setTemplateEventHandlers() {
+  Template.map.events = {
+    'click #map-detail-canvas': function($click) {
+      if(Session.get('mode') == 'create') {
+        locationService.handleCreateClick()
+      }
+    },
+    'mousewheel #map-detail-canvas': function(event) {
+      var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
+      locationService.zoom(direction)
+    },
+    'click .side-actions .create': function() {
+      Session.set('mode', 'create')
+    },
+    'click .side-actions .delete': function() {
+      Session.set('mode', 'delete')
+    },
+    'click .location-detail .delete-from-db': function() {
+      var location = Session.get('location')
+      Locations.remove({_id: location._id})
+    }
+  }
+}
