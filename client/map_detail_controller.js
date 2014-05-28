@@ -84,6 +84,7 @@ function setTemplateEventHandlers() {
     'click .location-detail .delete-from-db': function() {
       var location = Session.get('location')
       Locations.remove({_id: location._id})
+      Session.set('location', null)
     }
   }
 }
