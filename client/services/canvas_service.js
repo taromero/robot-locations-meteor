@@ -3,9 +3,15 @@ CanvasService = function() {
     var crd = currentRectangleData
     return { x: crd.x + crd.width/2, y: crd.y + crd.height/2 }
   }
-  this.drawRectangle = function (stage, from, to) {
+  this.drawRectangle = function (stage, from, to, locationId) {
     var shape = new createjs.Shape();
     shape.graphics.beginStroke("black");
+    shape.graphics.setStrokeStyle(5)
+    shape.locationId = locationId
+    shape.on('click', function(e) {
+      var location = Locations.findOne({ _id: shape.locationId })
+      Session.set('location', location)
+    })
     var currentRectangleData = {
       x: from.x,
       y: from.y,

@@ -4,7 +4,7 @@ LocationService = function(canvas) {
   window.stage = new createjs.Stage('map-detail-canvas')
   var canvasService = new CanvasService()
 
-  this.handleClick = (function() {
+  this.handleCreateClick = (function() {
     var state = 'waitForRectangleFirstClick'
     var rectangleFirstPos
     var currentRectangleData
@@ -13,7 +13,8 @@ LocationService = function(canvas) {
         rectangleFirstPos = canvasService.getMousePos(stage)
         state = 'waitForRectangleSecondClick'
       } else if(state == 'waitForRectangleSecondClick') {
-        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
+        var location = Locations.insert({})
+        currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage), location.id)
         state = 'waitForArrowClick'
       } else if(state == 'waitForArrowClick') {
         var from = canvasService.getRectangleCenter(currentRectangleData)
@@ -34,13 +35,19 @@ LocationService = function(canvas) {
         state = 'waitForRectangleFirstClick'
       }
     }
+
+    this.handleDeleteClick = function() {
+
+    }
   })()
 
   this.drawLocation = function(location) {
-    var from = { x: location.rectangle.x, y: location.rectangle.y }
-    var to = { x: from.x + location.rectangle.width, y: from.y + location.rectangle.height }
-    canvasService.drawRectangle(stage, from, to)
-    canvasService.drawLine(stage, location.arrow.from, location.arrow.to)
+    if(location.rectangle) {
+      var from = { x: location.rectangle.x, y: location.rectangle.y }
+      var to = { x: from.x + location.rectangle.width, y: from.y + location.rectangle.height }
+      canvasService.drawRectangle(stage, from, to, location._id)
+      canvasService.drawLine(stage, location.arrow.from, location.arrow.to)
+    }
   }
 
   this.zoom = function(direction) {
@@ -49,7 +56,7 @@ LocationService = function(canvas) {
     if(direction == 'down') { zoomFactor = -zoomFactor }
     var xZoom = stage.scaleX + zoomFactor
     var yZoom = stage.scaleY + zoomFactor
-    stage.setTransform(0, 0, xZoom, yZoom)
+    stage.setTransform(mouseCoords.x, mouseCoords.y, xZoom, yZoom, 0, 0, 0, mouseCoords.x, mouseCoords.y)
     stage.update()
   }
 }
