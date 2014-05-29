@@ -2,12 +2,6 @@ CanvasService = function() {
   this.getRectangleCenter = function(currentRectangleData) {
     var crd = currentRectangleData
     return { x: crd.x + crd.width/2, y: crd.y + crd.height/2 }
-
-    // var cr = currentRectangle
-    // var bounds = cr.getBounds()
-    // console.log('cr.getBounds().height ' , cr.getBounds().height);
-    // console.log('cr.y ' , cr.y);
-    // return { x: cr.x + bounds.width/2, y: cr.y + bounds.height/2 }
   }
   this.drawRectangle = function (stage, from, to, locationId) {
     var shape = new createjs.Shape();
@@ -26,7 +20,7 @@ CanvasService = function() {
     shape.setBounds(crd.x, crd.y, crd.width, crd.height);
     stage.addChild(shape)
     stage.update()
-    return { shape: shape, currentRectangleData: currentRectangleData }
+    return { shape: shape, data: currentRectangleData }
 
     function showLocationDetail() {
       var location = Locations.findOne({ _id: shape.locationId })

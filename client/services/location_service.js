@@ -1,68 +1,35 @@
 LocationService = function(canvas) {
   //we make it a function so we can init it when template is rendered (so canvas actually exists)
+  var canvasService = new CanvasService()
   window.stage = new createjs.Stage('map-detail-canvas')
-  var firstClick, rectangle, currentClick, crd
+  var firstClick, shape, currentClick, crd
   stage.on('pressmove', function() {
     if(firstClick == undefined) {
       firstClick = canvasService.getMousePos(stage)
     } else {
       var currentClick = canvasService.getMousePos(stage)
-      if(rectangle) {
-        stage.removeChild(rectangle)
-        aux = canvasService.drawRectangle(stage, firstClick, currentClick)
-        rectangle = aux.shape
-        crd = aux.currentRectangleData
-      } else {
+      if(shape) {
+        stage.removeChild(shape)
         rectangle = canvasService.drawRectangle(stage, firstClick, currentClick)
+        shape = rectangle.shape
+        crd = rectangle.data
+      } else {
+        shape = canvasService.drawRectangle(stage, firstClick, currentClick)
       }
     }
   })
 
   stage.on('click', function() {
-    if(rectangle) {
-      var from = canvasService.getRectangleCenter(crd)
-      console.log('from ' , from);
-      console.log('canvasService.getMousePos(stage) ' , canvasService.getMousePos(stage));
-      var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(stage))
-      function insertLocation(currentRectangleData, lineCoords) {
-        var cc = canvasService.getCanvasCoordinates(canvas)
-        var location = {
-          canvas: {
-            x: cc.left,
-            y: cc.top
-          },
-          rectangle: currentRectangleData,
-          arrow: lineCoords,
-          mapName: Session.get('currentMap').name
-        }
-        return Locations.insert(location)
-      }
+    if(userHasJustDrawnARegion()) {
+      var lineOrigin = canvasService.getRectangleCenter(crd)
+      var lineDest = canvasService.getMousePos(stage)
+      var lineCoords = canvasService.drawLine(stage, lineOrigin, lineDest)
       insertLocation(crd, lineCoords)
-      rectangle = null
+      shape = null
     }
-  })
-  stage.on('pressup', function() {
-    firstClick = undefined
-  })
-  var canvasService = new CanvasService()
 
-  this.handleCreateClick = (function() {
-    var state = 'waitForRectangleFirstClick'
-    var rectangleFirstPos
-    var currentRectangleData
-    return function(){
-      // if(state == 'waitForRectangleFirstClick') {
-      //   rectangleFirstPos = canvasService.getMousePos(stage)
-      //   state = 'waitForRectangleSecondClick'
-      // } else if(state == 'waitForRectangleSecondClick') {
-      //   currentRectangleData = canvasService.drawRectangle(stage, rectangleFirstPos, canvasService.getMousePos(stage))
-      //   state = 'waitForArrowClick'
-      // } else if(state == 'waitForArrowClick') {
-      //   var from = canvasService.getRectangleCenter(currentRectangleData)
-      //   var lineCoords = canvasService.drawLine(stage, from, canvasService.getMousePos(stage))
-      //   insertLocation(currentRectangleData, lineCoords)
-      //   state = 'waitForRectangleFirstClick'
-      // }
+    function userHasJustDrawnARegion() {
+      return shape
     }
 
     function insertLocation(currentRectangleData, lineCoords) {
@@ -79,7 +46,11 @@ LocationService = function(canvas) {
       return Locations.insert(location)
     }
 
-  })()
+  })
+
+  stage.on('pressup', function() {
+    firstClick = undefined
+  })
 
   this.drawLocation = function(location) {
     if(location.rectangle) {
