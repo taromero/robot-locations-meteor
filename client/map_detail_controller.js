@@ -14,11 +14,13 @@ MapDetailController = RouteController.extend({
            Meteor.subscribe('locations-for-map', this.params.name)
   },
   data: function() {
+    var maps = Maps.find()
     var currentMap = Maps.findOne({name: this.params.name})
     var locations = Locations.find().fetch()
     Session.set('currentMap', currentMap)
     Session.set('locations', locations)
     return {
+      maps: maps,
       map: currentMap,
       locations: locations
     }
