@@ -1,4 +1,6 @@
-## How to run the app
+> Staging site: http://robotlocations.meteor.com/
+
+## How to run the app on local env
 
 1. `mongo`
 2. `use robot-path-meteor`
