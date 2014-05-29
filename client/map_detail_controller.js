@@ -23,9 +23,10 @@ MapDetailController = RouteController.extend({
     }
   },
   onData: function() {
-    drawMap()
-    drawExistingLocations()
-    setCanvasSize()
+    drawMap(function() {
+      drawExistingLocations()
+      setCanvasSize()
+    })
 
     function setCanvasSize() {
       var ctx = canvas.getContext('2d');
@@ -35,11 +36,14 @@ MapDetailController = RouteController.extend({
       stage.update()
     }
 
-    function drawMap() {
-      var image = new createjs.Bitmap(Session.get('currentMap').imagePath);
-      Session.set('imageBounds', image.getBounds())
-      stage.addChild(image)
-      stage.update()
+    function drawMap(cb) {
+      var bitmap = new createjs.Bitmap(Session.get('currentMap').imagePath);
+      bitmap.image.onload = function() {
+        Session.set('imageBounds', bitmap.getBounds())
+        stage.addChild(bitmap)
+        stage.update()
+        cb()
+      }
     }
 
     function drawExistingLocations() {
