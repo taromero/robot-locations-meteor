@@ -50,8 +50,15 @@ function setTemplateEventHandlers() {
         mapDetailService.handleCreateClick()
       }
     },
+    //for chrome
     'mousewheel #map-detail-canvas': function(event) {
       var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
+      mapDetailService.zoom(direction)
+    },
+    //for FF
+    'MozMousePixelScroll #map-detail-canvas': function(event) {
+      var delta = parseInt(event.originalEvent.wheelDelta || -event.originalEvent.detail);
+      var direction = delta < 0 ? 'down' : 'up'
       mapDetailService.zoom(direction)
     },
     'click .side-actions .create': function() {
