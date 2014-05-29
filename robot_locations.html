@@ -24,14 +24,15 @@
       <canvas id='map-detail-canvas' class="img-thumbnail"></canvas>
     </div>
     <div class='side side-bar'>
-      <div class='side-actions'>
-        <button class='create btn btn-primary'>Create Locations</button>
-        <button class='delete btn btn-warning'>Delete Locations</button>
-      </div>
       <div class='location-detail'>
         {{#if location}}
           <div class="panel panel-default">
-            <div class="panel-heading">Location ID: {{location._id}}</div>
+            <div class="panel-heading">Location ID: {{location._id}}
+              <div>Rect X coord: {{ location.rectangle.x }}</div>
+              <div>Rect Y coord: {{ location.rectangle.y }}</div>
+              <div>Rect width: {{ location.rectangle.width }}</div>
+              <div>Rect height: {{ location.rectangle.height }}</div>
+            </div>
             <div class="panel-body">
               <button class='delete-from-db btn btn-danger'> Remove </button>
             </div>
