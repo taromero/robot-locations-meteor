@@ -6,5 +6,5 @@ Router.map(function() {
   this.route('map.detail', {
     path: '/maps/:name',
     controller: MapDetailController
-  });
-});
+  })
+})

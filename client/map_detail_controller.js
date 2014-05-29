@@ -1,10 +1,11 @@
-Maps = new Meteor.Collection('maps')
-Locations = new Meteor.Collection('locations')
-
-var locationService
+var mapDetailService
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
+    Template.map.rendered = function() {
+      Session.set('template', 'rendered')
+      mapDetailService = new MapDetailService()
+    }
     setTemplateBindings()
     setTemplateEventHandlers()
   },
@@ -23,42 +24,16 @@ MapDetailController = RouteController.extend({
     }
   },
   onData: function() {
-    drawMap(function(mapImage) {
-      drawExistingLocations()
-      setCanvasSize(mapImage)
-    })
-
-    function drawMap(cb) {
-      var mapImage = new createjs.Bitmap(Session.get('currentMap').imagePath);
-      mapImage.image.onload = function() {
-        stage.addChild(mapImage)
-        stage.update()
-        cb(mapImage)
-      }
-    }
-
-    function drawExistingLocations() {
-      Session.get('locations').forEach(function(location) {
-        locationService.drawLocation(location)
+    if(Session.get('template') == 'rendered') {
+      mapDetailService.drawMap(function(mapImage) {
+        mapDetailService.drawExistingLocations()
+        mapDetailService.setCanvasSize(mapImage)
       })
     }
-
-    function setCanvasSize(mapImage) {
-      var ctx = canvas.getContext('2d')
-      var imageBounds = mapImage.getBounds()
-      ctx.canvas.width  = imageBounds.width
-      ctx.canvas.height = imageBounds.height
-      stage.update()
-    }
-
   }
 })
 
 function setTemplateBindings() {
-  Template.map.rendered = function() {
-    window.canvas = $('#map-detail-canvas')[0]
-    locationService = new LocationService(canvas)
-  }
   Template.map.mode = function() {
     return Session.get('mode')
   }
@@ -72,12 +47,12 @@ function setTemplateEventHandlers() {
   Template.map.events = {
     'click #map-detail-canvas': function($click) {
       if(Session.get('mode') == 'create') {
-        locationService.handleCreateClick()
+        mapDetailService.handleCreateClick()
       }
     },
     'mousewheel #map-detail-canvas': function(event) {
       var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
-      locationService.zoom(direction)
+      mapDetailService.zoom(direction)
     },
     'click .side-actions .create': function() {
       Session.set('mode', 'create')

@@ -46,4 +46,4 @@ CanvasService = function() {
   this.getCanvasCoordinates = function(canvas) {
     return canvas.getBoundingClientRect()
   }
-}
+ }

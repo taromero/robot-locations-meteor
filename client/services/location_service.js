@@ -1,4 +1,3 @@
-
 LocationService = function(canvas) {
   //we make it a function so we can init it when template is rendered (so canvas actually exists)
   window.stage = new createjs.Stage('map-detail-canvas')
