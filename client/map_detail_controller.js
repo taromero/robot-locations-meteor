@@ -1,11 +1,15 @@
 Maps = new Meteor.Collection('maps')
 Locations = new Meteor.Collection('locations')
 
-var locationService
 var mapDetailService = new MapDetailService()
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
+    Template.map.rendered = function() {
+      window.canvas = $('#map-detail-canvas')[0]
+      locationService = new LocationService(canvas)
+      Session.set('rendered', true)
+    }
     mapDetailService.setTemplateBindings()
     mapDetailService.setTemplateEventHandlers()
   },
@@ -24,9 +28,11 @@ MapDetailController = RouteController.extend({
     }
   },
   onData: function() {
-    mapDetailService.drawMap(function(mapImage) {
-      mapDetailService.drawExistingLocations()
-      mapDetailService.setCanvasSize(mapImage)
-    })
+    if(Session.get('rendered')) {
+      mapDetailService.drawMap(function(mapImage) {
+        mapDetailService.drawExistingLocations()
+        mapDetailService.setCanvasSize(mapImage)
+      })
+    }
   }
 })

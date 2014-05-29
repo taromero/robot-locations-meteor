@@ -30,10 +30,6 @@ function setCanvasSize(mapImage) {
 }
 
 function setTemplateBindings() {
-  Template.map.rendered = function() {
-    window.canvas = $('#map-detail-canvas')[0]
-    locationService = new LocationService(canvas)
-  }
   Template.map.mode = function() {
     return Session.get('mode')
   }
