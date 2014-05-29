@@ -6,26 +6,38 @@
 </body>
 
 <template name="map">
-  <div class="page-header">
-    <h1>{{ map.name }} <small> / Current mode: {{mode}}</small></h1>
-  </div>
-  <div class='containing-div'>
-    <canvas id='map-detail-canvas' class="img-thumbnail"></canvas>
-  </div>
-  <div class='side-bar'>
-    <div class='side-actions'>
-      <button class='create btn btn-primary'>Create Locations</button>
-      <button class='delete btn btn-warning'>Delete Locations</button>
+  <div class="side menu">
+    <div class="page-header">
+      <h1>Maps: @ </h1>
     </div>
-    <div class='location-detail'>
-      {{#if location}}
-        <div class="panel panel-default">
-          <div class="panel-heading">Location ID: {{location._id}}</div>
-          <div class="panel-body">
-            <button class='delete-from-db btn btn-danger'> Remove </button>
+    {{#each maps}}
+      <div>
+        <a class="btn btn-default btn-lg" href="{{ pathFor 'map.detail' }}">{{ name }}</a>
+      </div>
+    {{/each}}
+  </div>
+  <div class='detail-content side'>
+    <div class="page-header">
+      <h1>{{ map.name }} <small> / Current mode: {{mode}}</small></h1>
+    </div>
+    <div class='side containing-div'>
+      <canvas id='map-detail-canvas' class="img-thumbnail"></canvas>
+    </div>
+    <div class='side side-bar'>
+      <div class='side-actions'>
+        <button class='create btn btn-primary'>Create Locations</button>
+        <button class='delete btn btn-warning'>Delete Locations</button>
+      </div>
+      <div class='location-detail'>
+        {{#if location}}
+          <div class="panel panel-default">
+            <div class="panel-heading">Location ID: {{location._id}}</div>
+            <div class="panel-body">
+              <button class='delete-from-db btn btn-danger'> Remove </button>
+            </div>
           </div>
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     </div>
   </div>
 </template>
