@@ -1,9 +1,13 @@
+var canvas
+var locationService
 MapDetailService = function() {
+  canvas = $('#map-detail-canvas')[0]
+  locationService = new LocationService(canvas)
   this.drawMap = drawMap
   this.drawExistingLocations = drawExistingLocations
   this.setCanvasSize = setCanvasSize
-  this.setTemplateBindings = setTemplateBindings
-  this.setTemplateEventHandlers = setTemplateEventHandlers
+  this.handleCreateClick = locationService.handleCreateClick
+  this.zoom = locationService.zoom
 }
 
 function drawMap(cb) {
@@ -27,39 +31,4 @@ function setCanvasSize(mapImage) {
   ctx.canvas.width  = imageBounds.width
   ctx.canvas.height = imageBounds.height
   stage.update()
-}
-
-function setTemplateBindings() {
-  Template.map.mode = function() {
-    return Session.get('mode')
-  }
-  Template.map.location = function() {
-    return Session.get('location')
-  }
-  Session.set('mode', 'Choose!')
-}
-
-function setTemplateEventHandlers() {
-  Template.map.events = {
-    'click #map-detail-canvas': function($click) {
-      if(Session.get('mode') == 'create') {
-        locationService.handleCreateClick()
-      }
-    },
-    'mousewheel #map-detail-canvas': function(event) {
-      var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
-      locationService.zoom(direction)
-    },
-    'click .side-actions .create': function() {
-      Session.set('mode', 'create')
-    },
-    'click .side-actions .delete': function() {
-      Session.set('mode', 'delete')
-    },
-    'click .location-detail .delete-from-db': function() {
-      var location = Session.get('location')
-      Locations.remove({_id: location._id})
-      Session.set('location', null)
-    }
-  }
 }

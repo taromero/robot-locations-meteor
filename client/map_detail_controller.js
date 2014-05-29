@@ -1,17 +1,13 @@
-Maps = new Meteor.Collection('maps')
-Locations = new Meteor.Collection('locations')
-
-var mapDetailService = new MapDetailService()
+var mapDetailService
 MapDetailController = RouteController.extend({
   action: function() {
     this.render('map')
     Template.map.rendered = function() {
-      window.canvas = $('#map-detail-canvas')[0]
-      locationService = new LocationService(canvas)
-      Session.set('rendered', true)
+      Session.set('template', 'rendered')
+      mapDetailService = new MapDetailService()
     }
-    mapDetailService.setTemplateBindings()
-    mapDetailService.setTemplateEventHandlers()
+    setTemplateBindings()
+    setTemplateEventHandlers()
   },
   waitOn: function() {
     return Meteor.subscribe('maps') &&
@@ -28,7 +24,7 @@ MapDetailController = RouteController.extend({
     }
   },
   onData: function() {
-    if(Session.get('rendered')) {
+    if(Session.get('template') == 'rendered') {
       mapDetailService.drawMap(function(mapImage) {
         mapDetailService.drawExistingLocations()
         mapDetailService.setCanvasSize(mapImage)
@@ -36,3 +32,38 @@ MapDetailController = RouteController.extend({
     }
   }
 })
+
+function setTemplateBindings() {
+  Template.map.mode = function() {
+    return Session.get('mode')
+  }
+  Template.map.location = function() {
+    return Session.get('location')
+  }
+  Session.set('mode', 'Choose!')
+}
+
+function setTemplateEventHandlers() {
+  Template.map.events = {
+    'click #map-detail-canvas': function($click) {
+      if(Session.get('mode') == 'create') {
+        mapDetailService.handleCreateClick()
+      }
+    },
+    'mousewheel #map-detail-canvas': function(event) {
+      var direction = event.originalEvent.deltaY > 0 ? 'down' : 'up'
+      mapDetailService.zoom(direction)
+    },
+    'click .side-actions .create': function() {
+      Session.set('mode', 'create')
+    },
+    'click .side-actions .delete': function() {
+      Session.set('mode', 'delete')
+    },
+    'click .location-detail .delete-from-db': function() {
+      var location = Session.get('location')
+      Locations.remove({_id: location._id})
+      Session.set('location', null)
+    }
+  }
+}

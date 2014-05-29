@@ -1,4 +1,3 @@
-var locationService
 CanvasService = function() {
   this.getRectangleCenter = function(currentRectangleData) {
     var crd = currentRectangleData
@@ -47,4 +46,4 @@ CanvasService = function() {
   this.getCanvasCoordinates = function(canvas) {
     return canvas.getBoundingClientRect()
   }
-}
+ }
