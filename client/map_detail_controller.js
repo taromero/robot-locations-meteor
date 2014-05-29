@@ -23,26 +23,17 @@ MapDetailController = RouteController.extend({
     }
   },
   onData: function() {
-    drawMap(function() {
+    drawMap(function(mapImage) {
       drawExistingLocations()
-      setCanvasSize()
+      setCanvasSize(mapImage)
     })
 
-    function setCanvasSize() {
-      var ctx = canvas.getContext('2d');
-      var imageBounds = Session.get('imageBounds')
-      ctx.canvas.width  = imageBounds.width;
-      ctx.canvas.height = imageBounds.height;
-      stage.update()
-    }
-
     function drawMap(cb) {
-      var bitmap = new createjs.Bitmap(Session.get('currentMap').imagePath);
-      bitmap.image.onload = function() {
-        Session.set('imageBounds', bitmap.getBounds())
-        stage.addChild(bitmap)
+      var mapImage = new createjs.Bitmap(Session.get('currentMap').imagePath);
+      mapImage.image.onload = function() {
+        stage.addChild(mapImage)
         stage.update()
-        cb()
+        cb(mapImage)
       }
     }
 
@@ -51,6 +42,15 @@ MapDetailController = RouteController.extend({
         locationService.drawLocation(location)
       })
     }
+
+    function setCanvasSize(mapImage) {
+      var ctx = canvas.getContext('2d')
+      var imageBounds = mapImage.getBounds()
+      ctx.canvas.width  = imageBounds.width
+      ctx.canvas.height = imageBounds.height
+      stage.update()
+    }
+
   }
 })
 
