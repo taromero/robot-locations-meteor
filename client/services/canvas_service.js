@@ -35,8 +35,13 @@ CanvasService = function() {
     return { from: from, to: to }
   }
   this.getMousePos = function(stage) {
-    var coords = stage.globalToLocal(stage.mouseX, stage.mouseY)
-    return {x: coords.x, y: coords.y}
+    var mousePos = getMousePosRelativeToDisplayObject()
+    return {x: mousePos.x, y: mousePos.y}
+
+    //this takes into account zoom when getting mouse pos
+    function getMousePosRelativeToDisplayObject() {
+      return stage.globalToLocal(stage.mouseX, stage.mouseY)
+    }
   }
   this.getCanvasCoordinates = function(canvas) {
     return canvas.getBoundingClientRect()
