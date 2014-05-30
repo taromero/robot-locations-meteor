@@ -17,7 +17,6 @@ CanvasService = function() {
     }
     var crd = currentRectangleData
     shape.graphics.drawRect(crd.x, crd.y, crd.width, crd.height);
-    shape.setBounds(crd.x, crd.y, crd.width, crd.height);
     stage.addChild(shape)
     stage.update()
     return { shape: shape, data: currentRectangleData }

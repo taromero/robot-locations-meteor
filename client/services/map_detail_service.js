@@ -6,7 +6,6 @@ MapDetailService = function() {
   this.drawMap = drawMap
   this.drawExistingLocations = drawExistingLocations
   this.setCanvasSize = setCanvasSize
-  this.handleCreateClick = locationService.handleCreateClick
   this.zoom = locationService.zoom
 }
 
