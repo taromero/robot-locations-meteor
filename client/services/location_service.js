@@ -8,9 +8,12 @@ LocationService = function(canvas) {
       firstClick = canvasService.getMousePos(stage)
     } else {
       var currentClick = canvasService.getMousePos(stage)
+      var rectangleCorners = getRectangleCorners(firstClick, currentClick)
       if(shape) {
         stage.removeChild(shape)
-        rectangle = canvasService.drawRectangle(stage, firstClick, currentClick)
+        rectangle = canvasService.drawRectangle(stage,
+                                                rectangleCorners.lowerLeftCorner,
+                                                rectangleCorners.upperRightCorner)
         shape = rectangle.shape
         crd = rectangle.data
       } else {
@@ -18,6 +21,25 @@ LocationService = function(canvas) {
       }
     }
   })
+
+  function getRectangleCorners(firstClick, currentClick) {
+    var lowerLeftCorner = {}
+    var upperRightCorner = {}
+    lowerLeftCorner.x = getLowerCoordinate(firstClick, currentClick, 'x')
+    lowerLeftCorner.y = getLowerCoordinate(firstClick, currentClick, 'y')
+    upperRightCorner.x = getUpperCoordinate(firstClick, currentClick, 'x')
+    upperRightCorner.y = getUpperCoordinate(firstClick, currentClick, 'y')
+
+    return { lowerLeftCorner: lowerLeftCorner, upperRightCorner: upperRightCorner }
+
+    function getLowerCoordinate(firstClick, currentClick, coord) {
+      return firstClick[coord] < currentClick[coord] ? firstClick[coord] : currentClick[coord]
+    }
+
+    function getUpperCoordinate(firstClick, currentClick, coord) {
+      return firstClick[coord] > currentClick[coord] ? firstClick[coord] : currentClick[coord]
+    }
+  }
 
   stage.on('click', function() {
     if(userHasJustDrawnARegion()) {
