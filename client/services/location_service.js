@@ -24,7 +24,9 @@ LocationService = function(canvas) {
       var lineOrigin = canvasService.getRectangleCenter(crd)
       var lineDest = canvasService.getMousePos(stage)
       var lineCoords = canvasService.drawLine(stage, lineOrigin, lineDest)
-      insertLocation(crd, lineCoords)
+      var locationId = insertLocation(crd, lineCoords)
+      var location = Locations.findOne({ _id: locationId })
+      Session.set('location', location)
       shape = null
     }
 
